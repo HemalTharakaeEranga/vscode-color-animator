@@ -50,7 +50,8 @@ function getNonce(): string {
 export class AnimationViewProvider {
   public static readonly viewType = 'animExplorer.animPanel';
 
-  private panel: vscode.WebviewPanel | undefined;
+  // ✅ ADD THIS (GLOBAL SINGLE INSTANCE)
+  private static currentPanel: vscode.WebviewPanel | undefined;
   private readonly extensionUri: vscode.Uri;
 
   /**
@@ -70,48 +71,41 @@ export class AnimationViewProvider {
    * Creating a second panel is wasteful and confusing for the user.
    */
   public openOrReveal(context: vscode.ExtensionContext): void {
-    if (this.panel) {
-      this.panel.reveal(vscode.ViewColumn.Two);
+
+    // ✅ Use STATIC panel
+    if (AnimationViewProvider.currentPanel) {
+      AnimationViewProvider.currentPanel.reveal(vscode.ViewColumn.Two);
       return;
     }
 
-    this.panel = vscode.window.createWebviewPanel(
+    const panel = vscode.window.createWebviewPanel(
       AnimationViewProvider.viewType,
       'Anim Explorer',
       vscode.ViewColumn.Two,
       {
         enableScripts: true,
-        // Only allow the webview to load resources from our own `media` folder.
         localResourceRoots: [vscode.Uri.joinPath(this.extensionUri, 'media')],
-        // Keep the JS state alive when the panel is hidden behind another tab.
         retainContextWhenHidden: true,
       }
     );
 
-    this.panel.iconPath = {
-      light: vscode.Uri.joinPath(this.extensionUri, 'media', 'icons', 'panel-light.svg'),
-      dark:  vscode.Uri.joinPath(this.extensionUri, 'media', 'icons', 'panel-dark.svg'),
-    };
+    AnimationViewProvider.currentPanel = panel;
 
-    this.panel.webview.html = this._buildHtml(this.panel.webview);
+    panel.webview.html = this._buildHtml(panel.webview);
 
-    // Route messages coming up from the webview JS.
-    this.panel.webview.onDidReceiveMessage(
+    // Wire up incoming messages from the webview.
+    panel.webview.onDidReceiveMessage(
       (msg) => this._handleMessage(msg),
-      null,
+      undefined,
       this.panelDisposables
     );
 
-    // When the user closes the panel, clean up everything tied to it.
-    this.panel.onDidDispose(
-      () => {
-        this.panel = undefined;
-        this.panelDisposables.forEach((d) => d.dispose());
-        this.panelDisposables = [];
-      },
-      null,
-      context.subscriptions
-    );
+    panel.onDidDispose(() => {
+      AnimationViewProvider.currentPanel = undefined;
+      // Clean up per-panel disposables.
+      this.panelDisposables.forEach((d) => d.dispose());
+      this.panelDisposables = [];
+    });
   }
 
   // ── Outgoing messages (extension → webview) ───────────────────────────────
@@ -121,10 +115,10 @@ export class AnimationViewProvider {
    * colour should be used for that file's language/extension.
    */
   public notifyFileChanged(uri: vscode.Uri, accentColor: string): void {
-    if (!this.panel) { return; }
+    if (!AnimationViewProvider.currentPanel) { return; }
     const ext   = path.extname(uri.fsPath);
     const color = accentFromExtension(ext, accentColor);
-    this.panel.webview.postMessage({
+    AnimationViewProvider.currentPanel.webview.postMessage({
       type:       'fileChanged',
       fileName:   path.basename(uri.fsPath),
       extension:  ext,
@@ -138,8 +132,20 @@ export class AnimationViewProvider {
    * auto-cycle or from a manual palette card click).
    */
   public notifyAccentChanged(accent: string, paletteName?: string): void {
-    if (!this.panel) { return; }
-    this.panel.webview.postMessage({ type: 'accentChanged', accent, paletteName });
+    if (!AnimationViewProvider.currentPanel) { return; }
+    AnimationViewProvider.currentPanel.webview.postMessage({ type: 'accentChanged', accent, paletteName });
+  }
+
+  /** Tell the webview that colours were reset to VS Code defaults. */
+  public notifyReset(): void {
+    if (!AnimationViewProvider.currentPanel) { return; }
+    AnimationViewProvider.currentPanel.webview.postMessage({ type: 'reset' });
+  }
+
+  /** Push the current VS Code colour-theme kind (Dark/Light/HC) to the webview. */
+  public notifyThemeKind(kind: vscode.ColorThemeKind): void {
+    if (!AnimationViewProvider.currentPanel) { return; }
+    AnimationViewProvider.currentPanel.webview.postMessage({ type: 'theme', kind });
   }
 
   /**
@@ -150,8 +156,8 @@ export class AnimationViewProvider {
    * full selection, and large payloads slow down the IPC channel.
    */
   public notifySelection(text: string, lineCount: number, accentColor: string): void {
-    if (!this.panel) { return; }
-    this.panel.webview.postMessage({
+    if (!AnimationViewProvider.currentPanel) { return; }
+    AnimationViewProvider.currentPanel.webview.postMessage({
       type:        'selectionChanged',
       text:        text.slice(0, 120),
       lineCount,
@@ -232,7 +238,7 @@ export class AnimationViewProvider {
 
       // ── Handshake — webview signals it has finished loading ───────────────
       case 'ready':
-        this.panel?.webview.postMessage({
+        AnimationViewProvider.currentPanel?.webview.postMessage({
           type: 'theme',
           kind: vscode.window.activeColorTheme.kind,
         });

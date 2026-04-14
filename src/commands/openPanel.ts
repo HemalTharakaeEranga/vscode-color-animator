@@ -17,11 +17,11 @@ import { AnimationViewProvider } from '../providers/animationViewProvider';
  */
 export function registerOpenPanelCommand(
   context: vscode.ExtensionContext,
-  animProvider: AnimationViewProvider
+  provider: AnimationViewProvider
 ): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('animExplorer.openPanel', () => {
-      animProvider.openOrReveal(context);
+      provider.openOrReveal(context);
     })
   );
 }
