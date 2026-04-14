@@ -499,6 +499,11 @@
 
   // ── Button actions ─────────────────────────────────────────────────────────
 
+  // Clicking the THEME stat chip opens VS Code's built-in theme picker so the
+  // user can switch between Dark / Light / High Contrast without leaving the panel.
+  document.getElementById('statTheme')?.addEventListener('click', () =>
+    vscode.postMessage({ type: 'toggleTheme' }));
+
   document.getElementById('btnGitStatus')?.addEventListener('click', () =>
     vscode.postMessage({ type: 'gitStatus' }));
 

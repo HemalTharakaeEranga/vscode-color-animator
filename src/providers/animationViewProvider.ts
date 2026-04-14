@@ -225,6 +225,11 @@ export class AnimationViewProvider {
         vscode.commands.executeCommand('animExplorer.resetTheme');
         break;
 
+      // User clicked the THEME stat chip — open VS Code's theme picker.
+      case 'toggleTheme':
+        vscode.commands.executeCommand('workbench.action.selectTheme');
+        break;
+
       // ── Handshake — webview signals it has finished loading ───────────────
       case 'ready':
         this.panel?.webview.postMessage({
@@ -298,8 +303,10 @@ export class AnimationViewProvider {
         <span class="stat-label">Extension</span>
         <span class="stat-value" id="statExtValue">—</span>
       </div>
-      <div class="stat-chip" id="statTheme">
-        <span class="stat-label">Theme</span>
+      <div class="stat-chip" id="statTheme"
+           title="Click to change VS Code theme"
+           style="cursor:pointer">
+        <span class="stat-label">Theme ↗</span>
         <span class="stat-value" id="statThemeValue">—</span>
       </div>
     </div>
@@ -320,26 +327,18 @@ export class AnimationViewProvider {
               aria-label="Activity pulse animation"></canvas>
     </section>
 
-    <!-- ── Workspace file list ────────────────────────────────────────────── -->
-    <section class="section">
-      <h2 class="section-title">Workspace Files</h2>
-      <div class="file-list" id="fileList">
-        ${this._buildFileListHtml()}
-      </div>
-    </section>
-
     <!-- ── Colour theme animator ──────────────────────────────────────────── -->
     <section class="section">
       <h2 class="section-title">Color Theme</h2>
 
-      <!-- All / Dark / Light filter -->
+      <!-- All / Dark / Light filter tabs -->
       <div class="ptab-row">
         <button class="ptab ptab-active" data-filter="all">All</button>
         <button class="ptab" data-filter="dark">Dark</button>
         <button class="ptab" data-filter="light">Light</button>
       </div>
 
-      <!-- Cards are injected by webview.js on load -->
+      <!-- Palette cards injected by webview.js on load -->
       <div class="palette-grid" id="paletteGrid"></div>
 
       <p class="palette-name" id="paletteName">Click a palette to apply</p>
@@ -354,9 +353,17 @@ export class AnimationViewProvider {
           &#9646;&#9646; Stop
         </button>
         <button class="action-btn theme-btn-reset" id="btnResetTheme"
-                title="Remove all colour customisations">
+                title="Remove all colour customisations and restore VS Code defaults">
           &#8635; Default
         </button>
+      </div>
+    </section>
+
+    <!-- ── Workspace file list ────────────────────────────────────────────── -->
+    <section class="section">
+      <h2 class="section-title">Workspace Files</h2>
+      <div class="file-list" id="fileList">
+        ${this._buildFileListHtml()}
       </div>
     </section>
 

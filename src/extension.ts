@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // Sidebar tree view — "Files" section in the Anim Explorer activity bar.
   const treeView = vscode.window.createTreeView('animExplorer.fileTree', {
     treeDataProvider: fileTreeProvider,
-    showCollapseAll:  true,
+    showCollapseAll:  false,   // disabled — prevents duplicate-looking icon next to refresh
   });
   context.subscriptions.push(treeView);
 

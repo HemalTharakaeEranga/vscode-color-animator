@@ -18,7 +18,8 @@
       {
         "command": "animExplorer.openPanel",
         "title": "Open Animated Panel",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(layout-panel)"
       },
       {
         "command": "animExplorer.refreshFileTree",
@@ -80,7 +81,8 @@
         {
           "command": "animExplorer.openPanel",
           "when": "view == animExplorer.fileTree",
-          "group": "navigation"
+          "group": "navigation",
+          "icon": "$(layout-panel)"
         }
       ],
       "view/item/context": [
