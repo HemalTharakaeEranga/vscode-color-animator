@@ -1,0 +1,130 @@
+{
+  "name": "vscode-color-animator",
+  "displayName": "Animated Explorer",
+  "description": "Animated file explorer with webview UI, selection tracking, and GitHub integration",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HemalTharakaeEranga/vscode-color-animator"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "animExplorer.openPanel",
+        "title": "Open Animated Panel",
+        "category": "Anim Explorer"
+      },
+      {
+        "command": "animExplorer.refreshFileTree",
+        "title": "Refresh File Tree",
+        "category": "Anim Explorer",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "animExplorer.openFile",
+        "title": "Open File",
+        "category": "Anim Explorer"
+      },
+      {
+        "command": "animExplorer.startTheme",
+        "title": "Start Color Animation",
+        "category": "Anim Explorer"
+      },
+      {
+        "command": "animExplorer.stopTheme",
+        "title": "Stop Color Animation",
+        "category": "Anim Explorer"
+      },
+      {
+        "command": "animExplorer.resetTheme",
+        "title": "Reset Theme Colors",
+        "category": "Anim Explorer"
+      },
+      {
+        "command": "animExplorer.applyPalette",
+        "title": "Apply Color Palette",
+        "category": "Anim Explorer"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "animExplorer",
+          "title": "Anim Explorer",
+          "icon": "media/icons/activity-bar.svg"
+        }
+      ]
+    },
+    "views": {
+      "animExplorer": [
+        {
+          "id": "animExplorer.fileTree",
+          "name": "Files",
+          "icon": "media/icons/activity-bar.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "animExplorer.refreshFileTree",
+          "when": "view == animExplorer.fileTree",
+          "group": "navigation"
+        },
+        {
+          "command": "animExplorer.openPanel",
+          "when": "view == animExplorer.fileTree",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "animExplorer.openFile",
+          "when": "view == animExplorer.fileTree && viewItem == file",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Anim Explorer",
+      "properties": {
+        "animExplorer.animationSpeed": {
+          "type": "number",
+          "default": 1.5,
+          "description": "Animation speed multiplier (0.5 = slow, 2.0 = fast)"
+        },
+        "animExplorer.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show active file info in the status bar"
+        },
+        "animExplorer.accentColor": {
+          "type": "string",
+          "default": "#61dafb",
+          "description": "Accent color for decorations and animations (hex)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.3.0"
+  }
+}
