@@ -1,8 +1,18 @@
 {
   "name": "vscode-color-animator",
   "displayName": "Animated Explorer",
-  "description": "Animated file explorer with webview UI, selection tracking, and GitHub integration",
+  "description": "Animated file explorer with live color themes, palette animator, selection tracking, and pulse canvas",
   "version": "0.0.1",
+  "publisher": "hemaleranga",
+  "icon": "vs_animator.png",
+  "galleryBanner": {
+    "color": "#0d0d18",
+    "theme": "dark"
+  },
+  "keywords": [
+    "animation", "theme", "color", "palette", "explorer", "file tree", "neon", "dark theme"
+  ],
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/HemalTharakaeEranga/vscode-color-animator"
@@ -11,7 +21,7 @@
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Other"
+    "Themes", "Other"
   ],
   "activationEvents": [],
   "main": "./out/extension.js",
@@ -65,7 +75,7 @@
         {
           "id": "animExplorer",
           "title": "Anim Explorer",
-          "icon": "vs_animator.png"
+          "icon": "media/icons/panel-dark.svg"
         }
       ]
     },
@@ -74,7 +84,7 @@
         {
           "id": "animExplorer.fileTree",
           "name": "Files",
-          "icon": "vs_animator.png"
+          "icon": "media/icons/panel-dark.svg"
         }
       ]
     },

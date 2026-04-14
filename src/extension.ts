@@ -45,6 +45,15 @@ export function activate(context: vscode.ExtensionContext): void {
   });
   context.subscriptions.push(treeView);
 
+  // Auto-open the webview panel whenever the user clicks the activity bar icon.
+  context.subscriptions.push(
+    treeView.onDidChangeVisibility((e) => {
+      if (e.visible) {
+        animProvider.openOrReveal(context);
+      }
+    })
+  );
+
   // ── Commands ────────────────────────────────────────────────────────────────
 
   // Open / focus the webview panel.
