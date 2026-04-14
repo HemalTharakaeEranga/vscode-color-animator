@@ -66,12 +66,52 @@
 
   const PALETTES = [
     // Dark palettes — deep backgrounds with vivid accent colours.
-    { name: 'Neon Green',  type: 'dark',  accent: '#00ff88',
+    { name: 'Neon Green',     type: 'dark', accent: '#00ff88',
       preview: ['#091a0d', '#00cc6a', '#00ff88'] },
-    { name: 'Neon Blue',   type: 'dark',  accent: '#00d4ff',
+    { name: 'Neon Blue',      type: 'dark', accent: '#00d4ff',
       preview: ['#081220', '#0099cc', '#00d4ff'] },
-    { name: 'Dark Purple', type: 'dark',  accent: '#c060ff',
+    { name: 'Dark Purple',    type: 'dark', accent: '#c060ff',
       preview: ['#120a1f', '#8822bb', '#c060ff'] },
+    { name: 'Neon Orange',    type: 'dark', accent: '#ff6a00',
+      preview: ['#150800', '#cc5500', '#ff6a00'] },
+    { name: 'Blood Red',      type: 'dark', accent: '#ff1a4d',
+      preview: ['#150005', '#cc003a', '#ff1a4d'] },
+    { name: 'Obsidian',       type: 'dark', accent: '#c0c0e0',
+      preview: ['#080810', '#505070', '#c0c0e0'] },
+    { name: 'Deep Navy',      type: 'dark', accent: '#4488ff',
+      preview: ['#00040f', '#2255cc', '#4488ff'] },
+    { name: 'Hot Pink',       type: 'dark', accent: '#ff0090',
+      preview: ['#150010', '#cc0070', '#ff0090'] },
+    { name: 'Neon Yellow',    type: 'dark', accent: '#f0d000',
+      preview: ['#141200', '#c0a800', '#f0d000'] },
+    { name: 'Steel Gray',     type: 'dark', accent: '#8899bb',
+      preview: ['#0a0d12', '#607080', '#8899bb'] },
+    { name: 'Amber Glow',     type: 'dark', accent: '#ffaa00',
+      preview: ['#140c00', '#cc8800', '#ffaa00'] },
+    { name: 'Crimson',        type: 'dark', accent: '#dd1133',
+      preview: ['#120005', '#bb0025', '#dd1133'] },
+    { name: 'Bourbon Brown',  type: 'dark', accent: '#d4783e',
+      preview: ['#150a00', '#a85820', '#d4783e'] },
+    { name: 'Midnight Blue',  type: 'dark', accent: '#3355ee',
+      preview: ['#00000f', '#2244cc', '#3355ee'] },
+    { name: 'Magenta Storm',  type: 'dark', accent: '#ff00ff',
+      preview: ['#150015', '#cc00cc', '#ff00ff'] },
+    { name: 'Gold Rush',      type: 'dark', accent: '#ffd700',
+      preview: ['#141000', '#ccaa00', '#ffd700'] },
+    { name: 'Ash Gray',       type: 'dark', accent: '#7b8fa0',
+      preview: ['#101214', '#566070', '#7b8fa0'] },
+    { name: 'Rust Metal',     type: 'dark', accent: '#cc5511',
+      preview: ['#140800', '#aa4408', '#cc5511'] },
+    { name: 'Coral Fire',     type: 'dark', accent: '#ff5252',
+      preview: ['#150a0a', '#ee3333', '#ff5252'] },
+    { name: 'Cyber Teal',     type: 'dark', accent: '#00ffcc',
+      preview: ['#001a14', '#00ccaa', '#00ffcc'] },
+    { name: 'Lava Red',       type: 'dark', accent: '#ff3300',
+      preview: ['#150300', '#dd2200', '#ff3300'] },
+    { name: 'Galaxy Purple',  type: 'dark', accent: '#aa44ff',
+      preview: ['#0a0020', '#8822ee', '#aa44ff'] },
+    { name: 'Rose Neon',      type: 'dark', accent: '#ff44aa',
+      preview: ['#150010', '#ee2288', '#ff44aa'] },
 
     // Light palettes — bright chrome with readable dark text.
     { name: 'Soft Mint',   type: 'light', accent: '#15803d',
@@ -110,7 +150,7 @@
    * held (before the next cross-fade begins).
    */
   function applyAccent(color) {
-    if (!color || color === accentColor) { return; }
+    if (!color) { return; }
     accentColor = color;
 
     const root = document.documentElement;
@@ -461,6 +501,19 @@
       case 'accentChanged': {
         applyAccent(msg.accent);
         if (msg.paletteName) { setActivePaletteCard(msg.paletteName); }
+        break;
+      }
+
+      // Colours were reset to VS Code defaults — clear accent and active card.
+      case 'reset': {
+        accentColor = '#61dafb';    // back to startup default
+        const root = document.documentElement;
+        root.style.removeProperty('--accent');
+        root.style.removeProperty('--accent-alpha');
+        root.style.removeProperty('--accent-glow');
+        if (ringProgress) { ringProgress.style.stroke = ''; }
+        if (logoLetter)   { logoLetter.style.color    = ''; }
+        setActivePaletteCard('');
         break;
       }
     }

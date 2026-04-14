@@ -10,7 +10,9 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "categories": ["Other"],
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -30,27 +32,32 @@
       {
         "command": "animExplorer.openFile",
         "title": "Open File",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(go-to-file)"
       },
       {
         "command": "animExplorer.startTheme",
         "title": "Start Color Animation",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(play)"
       },
       {
         "command": "animExplorer.stopTheme",
         "title": "Stop Color Animation",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(debug-pause)"
       },
       {
         "command": "animExplorer.resetTheme",
         "title": "Reset Theme Colors",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(discard)"
       },
       {
         "command": "animExplorer.applyPalette",
         "title": "Apply Color Palette",
-        "category": "Anim Explorer"
+        "category": "Anim Explorer",
+        "icon": "$(symbol-color)"
       }
     ],
     "viewsContainers": {
@@ -74,15 +81,14 @@
     "menus": {
       "view/title": [
         {
-          "command": "animExplorer.refreshFileTree",
-          "when": "view == animExplorer.fileTree",
-          "group": "navigation"
-        },
-        {
           "command": "animExplorer.openPanel",
           "when": "view == animExplorer.fileTree",
-          "group": "navigation",
-          "icon": "$(layout-panel)"
+          "group": "navigation@1"
+        },
+        {
+          "command": "animExplorer.refreshFileTree",
+          "when": "view == animExplorer.fileTree",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [

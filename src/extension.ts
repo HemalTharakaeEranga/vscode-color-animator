@@ -94,6 +94,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand('animExplorer.resetTheme', () => {
       resetTheme();
+      animProvider.notifyReset();
       vscode.window.showInformationMessage('Anim Theme: colours reset to default.');
     })
   );
@@ -108,6 +109,14 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // ── Features ────────────────────────────────────────────────────────────────
+
+  // Keep the "Theme ↗" stat chip in the webview in sync whenever the user
+  // switches between Dark / Light / High Contrast themes.
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveColorTheme((theme) => {
+      animProvider.notifyThemeKind(theme.kind);
+    })
+  );
 
   // Watch active editor and text selection changes, forward to the webview.
   registerSelectionWatcher(context, animProvider);
