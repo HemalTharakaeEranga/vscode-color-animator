@@ -58,7 +58,7 @@
         {
           "id": "animExplorer",
           "title": "Anim Explorer",
-          "icon": "media/icons/activity-bar.svg"
+          "icon": "vs_animator.png"
         }
       ]
     },
@@ -67,7 +67,7 @@
         {
           "id": "animExplorer.fileTree",
           "name": "Files",
-          "icon": "media/icons/activity-bar.svg"
+          "icon": "vs_animator.png"
         }
       ]
     },
